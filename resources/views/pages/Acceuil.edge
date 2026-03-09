@@ -1,0 +1,64 @@
+@layout('layouts/main')
+
+
+@section('body')
+<div class="container py-4">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-800 tracking-tight mb-0">Menus disponibles</h2>
+    <div class="text-muted small d-none d-md-block">Yaoundé, Cameroun</div>
+  </div>
+
+  <div class="row g-2 mb-4">
+    <div class="col-12">
+      <div class="input-group shadow-sm rounded-pill overflow-hidden bg-white border px-2 py-1">
+        <span class="input-group-text bg-white border-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text-muted" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+          </svg>
+        </span>
+        <input type="text" class="form-control border-0 shadow-none py-2" placeholder="Quel plat recherchez-vous ?">
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    @each(menu in menus) {{-- On suppose que tu envoies une liste 'menus' --}}
+    <div class="col-6 col-md-4 col-lg-3">
+      <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden menu-card">
+        <div class="position-relative">
+          <img src="{{ menu.image || '/food-plate.avif' }}" class="card-img-top" alt="{{ menu.name }}" style="height: 140px; object-fit: cover;">
+          <button class="btn btn-white btn-sm rounded-circle position-absolute top-0 end-0 m-2 shadow-sm p-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#6c757d" viewBox="0 0 16 16">
+              <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="card-body p-3">
+          <h6 class="fw-bold mb-1 text-truncate">{{ menu.name }}</h6>
+          <p class="small text-muted mb-2 text-truncate">{{ menu.restaurantName }}</p>
+          <div class="d-flex justify-content-between align-items-center mt-2">
+            <span class="fw-bold fs-6" style="color: #28A745;">{{ menu.price }} F</span>
+            <button class="btn btn-sm text-white rounded-pill px-3 py-1 shadow-sm bg-dash-red border-0 fw-bold" style="font-size: 0.75rem;">
+              Ajouter +
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    @endeach
+  </div>
+
+</div>
+
+<style>
+  .fw-800 { font-weight: 800; }
+  .menu-card { transition: transform 0.2s ease; cursor: pointer; }
+  .menu-card:hover { transform: translateY(-4px); }
+  .btn-white { background: white; border: none; }
+  
+  /* Dropdown styling */
+  .dropdown-item:active { background-color: #E31E24; }
+  .dropdown-menu { min-width: 200px; }
+</style>
+@end

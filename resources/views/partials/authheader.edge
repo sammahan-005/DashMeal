@@ -1,0 +1,52 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top py-2">
+  <div class="container flex-nowrap">
+    <a class="navbar-brand" href="{{ route('home') }}">
+      <img src="/logo.jpeg" alt="DashMeal" style="height: 40px; width: auto;">
+    </a>
+
+    <div class="ms-auto d-flex align-items-center gap-2">
+      <a href="/restaurant/register" class="btn btn-outline-dark rounded-pill px-3 py-1 fw-bold d-none d-md-inline-block small">
+        Je suis un restaurant
+      </a>
+      <a href="/restaurant/register" class="btn btn-outline-dark rounded-circle d-md-none p-2" title="Devenir partenaire">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M8.5 14.5A1.5 1.5 0 1 1 7 13a1.5 1.5 0 0 1 1.5 1.5zM1 2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2z"/>
+        </svg>
+      </a>
+
+      <div class="dropdown">
+        <button class="btn p-0 border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          @if(auth.user)
+            @!avatar({ 
+              initials: auth.user.initials, 
+              class: 'rounded-circle border border-2 border-white shadow-sm',
+              style: 'width: 40px; height: 40px; background-color: #E31E24; color: white;' 
+            })
+          @else
+            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 40px; height: 40px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#6c757d" viewBox="0 0 16 16">
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
+              </svg>
+            </div>
+          @endif
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 mt-2">
+          @if(auth.user)
+            <li><h6 class="dropdown-header fw-bold text-dark">{{ auth.user.fullName }}</h6></li>
+            <li><a class="dropdown-item py-2" href="/profile">Mon Profil</a></li>
+            <li><a class="dropdown-item py-2" href="/orders">Mes Commandes</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              @form({ route: 'session.destroy', method: 'POST' })
+                <button type="submit" class="dropdown-item text-danger fw-bold">Déconnexion</button>
+              @end
+            </li>
+          @else
+            <li><a class="dropdown-item py-2" href="{{ route('session.create') }}">Connexion</a></li>
+            <li><a class="dropdown-item py-2 fw-bold text-dash-red" href="{{ route('new_account.create') }}">S'inscrire</a></li>
+          @end
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>

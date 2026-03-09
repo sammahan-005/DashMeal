@@ -1,0 +1,115 @@
+@layout('layouts/main')
+
+
+<div class="landing-wrapper overflow-hidden">
+  
+  <section class="py-5 py-md-5 border-bottom">
+    <div class="container py-lg-5">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6 text-center text-lg-start">
+          <h1 class="display-4 fw-bolder mb-3 tracking-tight" style="color: #1A1A1A;">
+            Vos repas préférés, <br>
+            <span style="color: #E31E24;">livrés en un éclair.</span>
+          </h1>
+          <p class="lead text-muted mb-4">
+            Commandez auprès des meilleurs restaurants de Yaoundé et profitez d'une livraison ultra-rapide avec paiement sécurisé par Mobile Money.
+          </p>
+          <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
+            <a href="{{ route('new_account.create') }}" class="btn btn-lg rounded-pill px-5 py-3 fw-bold text-white shadow-lg" 
+               style="background-color: #E31E24; border: none;">
+              Commencer maintenant
+            </a>
+            <a href="#concept" class="btn btn-lg btn-outline-dark rounded-pill px-5 py-3 fw-bold">
+              En savoir plus
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-6 d-none d-lg-block">
+          <div class="position-relative">
+            <div class="bg-danger rounded-4 position-absolute w-100 h-100 opacity-10 rotate-3"></div>
+            <img src="/mockup-phone.png" alt="DashMeal App" class="img-fluid position-relative z-1 shadow-lg rounded-4">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="concept" class="py-5 bg-light">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="fw-bold h1">Pourquoi choisir <span style="color: #E31E24;">DashMeal</span> ?</h2>
+        <div class="mx-auto" style="width: 60px; height: 4px; background: #E31E24; border-radius: 2px;"></div>
+      </div>
+
+      <div class="row g-4 text-center">
+        <div class="col-md-4">
+          <div class="p-4 h-100">
+            <div class="d-inline-flex align-items-center justify-content-center bg-white shadow-sm rounded-circle mb-4" style="width: 80px; height: 80px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="#28A745" viewBox="0 0 16 16">
+                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+              </svg>
+            </div>
+            <h4 class="fw-bold">Choix Varié</h4>
+            <p class="text-muted">Des restaurants locaux aux grandes enseignes, trouvez tout ce qui vous fait envie.</p>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="p-4 h-100">
+            <div class="d-inline-flex align-items-center justify-content-center bg-white shadow-sm rounded-circle mb-4" style="width: 80px; height: 80px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#F7941D" viewBox="0 0 16 16">
+                <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
+              </svg>
+            </div>
+            <h4 class="fw-bold">Paiement Local</h4>
+            <p class="text-muted">Payez facilement via Orange Money ou MTN Mobile Money, sans frais cachés.</p>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="p-4 h-100 border-success">
+            <div class="d-inline-flex align-items-center justify-content-center bg-white shadow-sm rounded-circle mb-4" style="width: 80px; height: 80px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#28A745" viewBox="0 0 16 16">
+                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+              </svg>
+            </div>
+            <h4 class="fw-bold">Suivi Live</h4>
+            <p class="text-muted">Suivez votre commande en temps réel, de la préparation jusqu'au pas de votre porte.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-5 text-white" >
+    <div class="container text-center py-4">
+      <h2 class="fw-bold mb-4">Prêt à commander ?</h2>
+      <p class="mb-4 text-white-50 mx-auto" style="max-width: 600px;">
+        Rejoignez des milliers d'utilisateurs satisfaits et commencez à savourer le meilleur de votre ville.
+      </p>
+      <a href="{{ route('new_account.create') }}" class="btn btn-lg rounded-pill px-5 fw-bold text-white shadow-sm" style="background-color: #E31E24;">
+        Rejoindre DashMeal
+      </a>
+    </div>
+  </section>
+
+</div>
+
+<style>
+  .tracking-tight { letter-spacing: -2px; }
+  .rotate-3 { transform: rotate(3deg); }
+  .z-1 { z-index: 1; }
+  
+  
+  .shadow-sm {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+  
+  #concept .col-md-4:hover .shadow-sm {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+  }
+</style>
+@end

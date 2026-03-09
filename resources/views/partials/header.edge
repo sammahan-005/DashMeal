@@ -1,0 +1,51 @@
+<nav class="navbar navbar-light bg-white shadow-sm sticky-top py-2">
+  <div class="container d-flex justify-content-between align-items-center flex-nowrap">
+    
+    <a class="navbar-brand m-0" href="{{ route('home') }}">
+      <img src="/logo.jpeg" alt="DashMeal" class="img-fluid" style="max-height: 70px; width: auto;">
+    </a>
+
+    <div class="d-flex align-items-center gap-2">
+      
+      @if(auth.user)
+        {{-- Utilisateur Connecté : Avatar + Logout --}}
+        @!avatar({ 
+          initials: auth.user.initials, 
+          class: 'rounded-circle shadow-sm border border-white',
+          style: 'width: 32px; height: 32px;' 
+        })
+        @form({ route: 'session.destroy', method: 'POST', class: 'm-0' })
+          <button type="submit" class="btn btn-sm fw-bold p-1 text-muted" style="font-size: 0.8rem;">
+            Quitter
+          </button>
+        @end
+
+      @else
+        {{-- Visiteur : Liens directs --}}
+        <a href="{{ route('session.create') }}" 
+           class="btn btn-link text-decoration-none fw-bold p-1" 
+           style="color: #1A1A1A; font-size: 0.85rem;">
+          Login
+        </a>
+
+        <a href="{{ route('new_account.create') }}" 
+           class="btn rounded-pill px-3 py-1 fw-bold text-white shadow-sm" 
+           style="background-color: #E31E24; font-size: 0.85rem; transition: transform 0.2s;">
+          S'inscrire
+        </a>
+      @end
+
+    </div>
+  </div>
+</nav>
+
+<style>
+  /* On s'assure que rien ne passe à la ligne */
+  .flex-nowrap {
+    white-space: nowrap;
+  }
+  
+  .btn:active {
+    transform: scale(0.95);
+  }
+</style>
