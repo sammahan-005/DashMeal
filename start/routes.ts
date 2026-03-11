@@ -11,6 +11,10 @@ import { middleware } from '#start/kernel'
 import { controllers } from '#generated/controllers'
 import router from '@adonisjs/core/services/router'
 
+const Dashboard = ()=> import('#controllers/dashboard_controller')
+const Menus = ()=> import('#controllers/menus_controller')
+const Commandes = ()=> import('#controllers/commandes_controller')
+
 router.on('/').render('pages/home').as('home')
 
 router
@@ -32,8 +36,8 @@ router
 
 router
   .group(() => {
-    router.get('dashboard', [controllers.Dashboard, 'index'])
-    router.resource('menus', controllers.Menus)
-    router.resource('commandes', controllers.Commandes)
+    router.get('dashboard', [Dashboard, 'index'])
+    router.resource('menus', Menus)
+    router.resource('commandes', Commandes)
   })
   .use(middleware.auth())

@@ -1,10 +1,10 @@
 import { CommandeSchema } from '#database/schema'
-import { belongsTo, column } from '@adonisjs/lucid/orm'
-import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import { belongsTo, column, manyToMany} from '@adonisjs/lucid/orm'
+import type { BelongsTo, ManyToMany } from '@adonisjs/lucid/types/relations'
+
 import { DateTime } from 'luxon'
 import User from '#models/user'
 import Menu from '#models/menu'
-import Restaurant from '#models/restaurant'
 
 export default class Commande extends CommandeSchema {
 
@@ -14,11 +14,6 @@ export default class Commande extends CommandeSchema {
     @column()
     declare user_id: number
 
-    @column()
-    declare menu_id: number
-
-    @column()
-    declare quantity: number
 
     @column.dateTime({ autoCreate: true })
     declare createdAt: DateTime
@@ -29,9 +24,8 @@ export default class Commande extends CommandeSchema {
     @belongsTo(() => User)
     declare user: BelongsTo<typeof User>
 
-    @belongsTo(() => Menu)
-    declare menu: BelongsTo<typeof Menu>
+    @manyToMany(() => Menu)
+    declare menus: ManyToMany<typeof Menu>
 
-    @belongsTo(() => Restaurant)
-    declare restaurant: BelongsTo<typeof Restaurant>
+
 }

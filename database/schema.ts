@@ -7,17 +7,28 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
-export class CommandeSchema extends BaseModel {
-  static $columns = ['createdAt', 'id', 'menuId', 'quantity', 'updatedAt', 'userId'] as const
-  $columns = CommandeSchema.$columns
+export class CommandeMenuSchema extends BaseModel {
+  static $columns = ['commandeId', 'createdAt', 'id', 'menuId', 'updatedAt'] as const
+  $columns = CommandeMenuSchema.$columns
+  @column()
+  declare commandeId: number | null
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
   @column({ isPrimary: true })
   declare id: number
   @column()
   declare menuId: number | null
-  @column()
-  declare quantity: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
+export class CommandeSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'updatedAt', 'userId'] as const
+  $columns = CommandeSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column({ isPrimary: true })
+  declare id: number
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
   @column()
@@ -46,7 +57,7 @@ export class MenuSchema extends BaseModel {
 }
 
 export class RestaurantSchema extends BaseModel {
-  static $columns = ['address', 'createdAt', 'id', 'name', 'phoneNumber', 'updatedAt'] as const
+  static $columns = ['address', 'createdAt', 'id', 'name', 'phoneNumber', 'updatedAt', 'userId'] as const
   $columns = RestaurantSchema.$columns
   @column()
   declare address: string
@@ -60,6 +71,8 @@ export class RestaurantSchema extends BaseModel {
   declare phoneNumber: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
+  @column()
+  declare userId: number | null
 }
 
 export class UserSchema extends BaseModel {

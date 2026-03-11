@@ -1,8 +1,9 @@
 import { MenuSchema } from '#database/schema'
-import { belongsTo, column } from '@adonisjs/lucid/orm'
-import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import { belongsTo, column, manyToMany } from '@adonisjs/lucid/orm'
+import type { BelongsTo,ManyToMany } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
 import Restaurant from '#models/restaurant'
+import Commande from './commande.ts'
 
 export default class Menu extends MenuSchema {
 
@@ -32,4 +33,7 @@ export default class Menu extends MenuSchema {
 
     @belongsTo(() => Restaurant)
     declare restaurant: BelongsTo<typeof Restaurant>
+
+    @manyToMany(() => Commande)
+    declare commandes: ManyToMany<typeof Commande>
 }
