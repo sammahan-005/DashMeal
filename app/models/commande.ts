@@ -14,6 +14,8 @@ export default class Commande extends CommandeSchema {
     @column()
     declare user_id: number
 
+    @column()
+    declare validated: boolean
 
     @column.dateTime({ autoCreate: true })
     declare createdAt: DateTime
@@ -26,6 +28,8 @@ export default class Commande extends CommandeSchema {
 
     @manyToMany(() => Menu)
     declare menus: ManyToMany<typeof Menu>
+
+
 
 
 }

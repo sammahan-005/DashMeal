@@ -4,6 +4,8 @@
  */
 
 export const controllers = {
+  Commandes: () => import('#controllers/commandes_controller'),
+  Menus: () => import('#controllers/menus_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
   Session: () => import('#controllers/session_controller'),
 }
