@@ -66,6 +66,7 @@
     "@adonisjs/static": "^2.0.0",
     "@adonisjs/vite": "^5.1.0",
     "@vinejs/vine": "^4.3.0",
+    "adonis-autoswagger": "^3.73.0",
     "better-sqlite3": "^12.6.2",
     "edge.js": "^6.5.0",
     "luxon": "^3.7.2",

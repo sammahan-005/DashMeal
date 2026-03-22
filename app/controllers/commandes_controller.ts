@@ -2,6 +2,7 @@
 
 import Menu from '#models/menu'
 import type { HttpContext } from '@adonisjs/core/http'
+import Commande from '#models/commande'
 
 export default class CommandesController {
   /**
@@ -46,6 +47,13 @@ export default class CommandesController {
     session.flash('success', 'Menu ajouté à votre commande')
   }
 
+
+  async validate({params}:HttpContext){
+    const commande = await Commande.findOrFail(params.id)
+    commande.validated = true
+    await commande.save()
+
+  }
   // /**
   //  * Show individual record
   //  */
