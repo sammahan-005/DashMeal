@@ -59,12 +59,14 @@ export class MenuSchema extends BaseModel {
 }
 
 export class RestaurantSchema extends BaseModel {
-  static $columns = ['address', 'createdAt', 'id', 'name', 'phoneNumber', 'updatedAt', 'userId'] as const
+  static $columns = ['address', 'createdAt', 'description', 'id', 'name', 'phoneNumber', 'updatedAt', 'userId'] as const
   $columns = RestaurantSchema.$columns
   @column()
   declare address: string
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
+  @column()
+  declare description: string
   @column({ isPrimary: true })
   declare id: number
   @column()

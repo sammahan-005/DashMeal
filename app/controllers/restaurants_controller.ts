@@ -2,6 +2,7 @@ import Restaurant from '#models/restaurant'
 import Commande from '#models/commande'
 import { type HttpContext } from '@adonisjs/core/http'
 import { RestaurantCreationValidator } from '#validators/restaurant'
+// import { dd } from '@adonisjs/core/services/dumper'
 
 export default class RestaurantsController {
   
@@ -26,10 +27,12 @@ export default class RestaurantsController {
   /**
    * Handle form submission for the create action
    */
-  async store({ request, response }: HttpContext) {
-
+  async store({ request, response, auth }: HttpContext) {
+  //  dd(request.all())
+    await auth.authenticate()
+    const user = auth.user!
     const validated = await request.validateUsing(RestaurantCreationValidator)
-    const restaurant = await Restaurant.create(validated)
+    const restaurant = await user.related('restaurant').create(validated)
     return response.redirect().toRoute('restaurants.show', { id: restaurant.id })
   }
 

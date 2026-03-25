@@ -17,7 +17,7 @@ export default class CommandesController {
                                 .where('validated', false)
                                 .preload('menus')
      
-    return view.render('Commandes/Index', { commandes })
+    return view.render('pages/Commandes/Index', { commandes })
   }
 
   // /**
