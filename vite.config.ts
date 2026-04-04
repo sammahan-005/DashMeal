@@ -5,7 +5,7 @@ export default defineConfig({
   server: {
     host: '0.0.0.0', // Permet à Vite d'écouter sur le réseau
     hmr: {
-        host: '192.168.1.146' // L'IP de votre machine hôte
+        host: 'localhost' // L'IP de votre machine hôte
     }
   },
   plugins: [

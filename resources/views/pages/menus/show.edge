@@ -1,0 +1,98 @@
+@layout('layouts/main')
+
+<div class="menu-detail bg-light min-vh-100">
+  <div class="container py-5">
+    
+    <nav class="mb-4 px-2">
+    <a href="{{ route('welcome') }}" class="text-decoration-none text-muted fw-bold small">
+        <i class="bi bi-arrow-left me-1"></i> Retour
+      </a>
+    </nav>
+
+    <div class="row g-5">
+      <div class="col-12 col-lg-6">
+        <div class="rounded-5 shadow-sm overflow-hidden bg-white border p-2">
+          <img src="{{ menu.imageUrl || '/food-plate.avif' }}" 
+               class="w-100 rounded-4 object-fit-cover" 
+               style="aspect-ratio: 4/3;" 
+               alt="{{ menu.name }}">
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-6">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <span class="badge bg-dash-red-subtle text-dash-red mb-2 px-3 py-2 rounded-pill fw-bold">
+              {{ menu.category || 'Spécialité' }}
+            </span>
+            <h1 class="fw-800 display-5 mb-0">{{ menu.name }}</h1>
+          </div>
+          <div class="text-end">
+            <span class="display-6 fw-800 text-success">{{ menu.price }} <small class="fs-4">F</small></span>
+          </div>
+        </div>
+
+        <p class="fs-5 text-muted mb-4">
+          {{ menu.description || 'Aucune description disponible pour ce plat.' }}
+        </p>
+
+        <hr class="my-4 opacity-10">
+
+        <div class="row g-4 mb-5">
+          {{-- <div class="col-6">
+            <h6 class="fw-bold text-dark"><i class="bi bi-clock me-2"></i>Temps de prép.</h6>
+            <p class="text-muted mb-0">{{ menu.prepTime || '15-20' }} min</p>
+          </div>
+          <div class="col-6">
+            <h6 class="fw-bold text-dark"><i class="bi bi-fire me-2"></i>Calories</h6>
+            <p class="text-muted mb-0">{{ menu.calories || '---' }} kcal</p>
+          </div>
+        </div> --}}
+
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+          <div class="d-flex align-items-center justify-content-between gap-3">
+            <div class="input-group" style="width: 140px;">
+              <button class="btn btn-outline-secondary rounded-pill px-3" onclick="updateQty(-1)">-</button>
+              <input type="text" id="qty" class="form-control text-center fw-bold border-secondary rounded-pill" value="1" readonly>
+              <button class="btn btn-outline-secondary rounded-pill px-3" onclick="updateQty(1)">+</button>
+            </div>
+            
+            <button class="btn btn-dash-red btn-lg flex-grow-1 rounded-pill fw-bold text-white shadow-sm py-3 transition-all hov-scale">
+              Ajouter au panier <i class="bi bi-cart-plus ms-2"></i>
+            </button>
+          </div>
+        </div>
+        
+        {{-- <div class="mt-4 d-flex gap-2">
+          <span class="badge border text-muted rounded-pill px-3">Sans Gluten</span>
+          <span class="badge border text-muted rounded-pill px-3">Pimenté</span>
+        </div> --}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .fw-800 { font-weight: 800; }
+  .text-dash-red { color: #E31E24; }
+  .bg-dash-red { background-color: #E31E24; }
+  .bg-dash-red-subtle { background-color: #ffebee; }
+  .btn-dash-red { background-color: #E31E24; border: none; }
+  .btn-dash-red:hover { background-color: #c1181d; transform: translateY(-2px); }
+  
+  .hov-scale { transition: all 0.2s; }
+  .hov-scale:active { transform: scale(0.98); }
+
+  .object-fit-cover { object-fit: cover; }
+</style>
+
+<script>
+  function updateQty(delta) {
+    const input = document.getElementById('qty');
+    let val = parseInt(input.value) + delta;
+    if (val < 1) val = 1;
+    input.value = val;
+  }
+</script>
+
+@end

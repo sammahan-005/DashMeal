@@ -48,4 +48,5 @@ export const middleware = router.named({
   restaurantOwner: () => import('#middleware/restaurant_owner_middleware'),
   guest: () => import('#middleware/guest_middleware'),
   auth: () => import('#middleware/auth_middleware'),
+  silentAuth: () => import('#middleware/silent_auth_middleware'),
 })

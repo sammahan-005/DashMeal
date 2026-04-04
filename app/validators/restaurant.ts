@@ -5,4 +5,5 @@ export const RestaurantCreationValidator = vine.create({
     description: vine.string(),
     address: vine.string(),
     phone_number: vine.string(),
+    
 })

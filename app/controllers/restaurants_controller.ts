@@ -1,19 +1,21 @@
 import Restaurant from '#models/restaurant'
-import Commande from '#models/commande'
 import { type HttpContext } from '@adonisjs/core/http'
 import { RestaurantCreationValidator } from '#validators/restaurant'
-// import { dd } from '@adonisjs/core/services/dumper'
+//import { dd } from '@adonisjs/core/services/dumper'
 
 export default class RestaurantsController {
   
   /**
      * Display a list of resource
      */
-    async index({params, view}: HttpContext) {
-      const commandes = await Commande.query().where('validated', true).preload('menus').where('restaurant_id', params.id)
+    // async index({params, view, auth}: HttpContext) {
+    //   await auth.authenticate()
+    //   const user = auth.user!
+    //   const restaurant = (await user.related('restaurant').query().firstOrFail()).load('menus')
+    //   const commandes = await Commande.query().where('validated', true).preload('menus').where('restaurant_id', params.id)
       
-      return view.render('pages/restaurants/index', { commandes })
-    }
+    //   return view.render('pages/restaurants/index', { commandes, restaurant })
+    // }
 
 
   /**
@@ -40,8 +42,13 @@ export default class RestaurantsController {
    * Show individual record
    */
   async show({view, params}: HttpContext) {
-    const restaurant = await Restaurant.findOrFail(params.id)
-    return view.render('pages/restaurants/index', { restaurant })
+    const restaurant = await Restaurant.query()
+    .where('id', params.id)
+    // .preload('menus')
+    .firstOrFail()
+    const menus = await restaurant.related('menus').query()
+    //dd(menus)
+    return view.render('pages/restaurants/index', { restaurant, menus })
   }
 
   // /**

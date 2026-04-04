@@ -16,9 +16,10 @@
           <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
         </svg>
         {{-- Badge de décompte (affiché seulement si > 0) --}}
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-white" style="font-size: 0.65rem; padding: 0.35em 0.5em;">
-          {{ cartCount || 0 }}
-        </span>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-white" style="font-size: 0.65rem; padding: 0.35em 0.5em;">
+            {{pendingCount}} 
+            
+          </span>
       </a>
 
       {{-- Menu Utilisateur --}}
@@ -43,6 +44,16 @@
             
              
              <li>
+              
+             @if(await auth.user.related('restaurant').query().first()) 
+             <a class="dropdown-item py-2 px-3" href="{{ route('restaurants.show', await auth.user.related('restaurant').query().first() )}}" class="btn btn-outline-dark rounded-pill px-3 py-2 fw-bold d-none d-md-flex align-items-center gap-2 border-2 transition-all hover-bg-dark" style="font-size: 0.85rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-home">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" />
+                  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+                </svg>
+                Gestion de mon restaurant
+              </a>
+             @else
              <a class="dropdown-item py-2 px-3" href="{{ route('restaurants.create') }}" class="btn btn-outline-dark rounded-pill px-3 py-2 fw-bold d-none d-md-flex align-items-center gap-2 border-2 transition-all hover-bg-dark" style="font-size: 0.85rem;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-home">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" />
@@ -50,6 +61,8 @@
                 </svg>
                 Je suis un restaurant
               </a>
+              @endif
+            </li>
               </li>
               <li><hr class="dropdown-divider opacity-50"></li>
             <li class="px-2">

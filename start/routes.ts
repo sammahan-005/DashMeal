@@ -19,10 +19,12 @@ const Menus = ()=> import('#controllers/menus_controller')
 const Commandes = ()=> import('#controllers/commandes_controller')
 const Dashboard = ()=> import('#controllers/dashboard_controller')
 const Restaurant = ()=> import('#controllers/restaurants_controller')
+const Welcome = ()=> import('#controllers/welcomes_controller')
 
 router.on('/').render('pages/home').as('home')
 
-router.on('/welcome').render('pages/welcome').as('welcome')
+router.get('/welcome', [Welcome, 'index']).as('welcome').use(middleware.auth()).use(middleware.silentAuth())
+
 
 
 router
@@ -34,6 +36,7 @@ router
     router.post('login', [controllers.Session, 'store'])
   })
   .use(middleware.guest())
+  .use(middleware.silentAuth())
 
 router
   .group(() => {
@@ -45,7 +48,8 @@ router
 router
   .group(() => {
     router.get('dashboard', [Dashboard, 'index'])
-    router.resource('menus', Menus).use('*' , [middleware.restaurantOwner()])
+    router.resource('menus', Menus).except(['index'])
+    //.use('*' , [middleware.restaurantOwner()])
     router
       .group(() => {
         router.resource('restaurants', Restaurant).except(['index'])
@@ -53,6 +57,7 @@ router
       })  
   })
   .use(middleware.auth())
+  .use(middleware.silentAuth())
 
 
 // returns swagger in YAML

@@ -4,5 +4,7 @@ export const MenuCreationValidator = vine.create({
     name: vine.string(),
     description: vine.string(),
     price: vine.number(),
+    category: vine.enum(['entree', 'plat', 'dessert', 'boisson'])
+
 })
 

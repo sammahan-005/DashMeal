@@ -25,6 +25,9 @@ export default class Menu extends MenuSchema {
     @column()
     declare restaurant_id: number
 
+    @column()
+    declare category: string
+
     @column.dateTime({ autoCreate: true })
     declare createdAt: DateTime
 
@@ -34,6 +37,9 @@ export default class Menu extends MenuSchema {
     @belongsTo(() => Restaurant)
     declare restaurant: BelongsTo<typeof Restaurant>
 
-    @manyToMany(() => Commande)
+    @manyToMany(() => Commande,{
+        pivotTable: 'commande_menus'
+    
+    })
     declare commandes: ManyToMany<typeof Commande>
 }

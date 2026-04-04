@@ -26,7 +26,9 @@ export default class Commande extends CommandeSchema {
     @belongsTo(() => User)
     declare user: BelongsTo<typeof User>
 
-    @manyToMany(() => Menu)
+    @manyToMany(() => Menu,{
+        pivotTable: 'commande_menus'
+    })
     declare menus: ManyToMany<typeof Menu>
 
 

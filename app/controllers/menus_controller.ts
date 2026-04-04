@@ -1,20 +1,11 @@
 import Menu from '#models/menu'
 import { MenuCreationValidator } from '#validators/menu'
 import { type HttpContext } from '@adonisjs/core/http'
+//import { dd } from '@adonisjs/core/services/dumper'
 
 // accessible only by restaurant owner
 export default class MenusController {
-  /**
-   * Display a list of resource
-   */
-  async index({ view, auth }: HttpContext) {
-    await auth.authenticate()
-    const user = auth.user!
-    const menus = await Menu.query()
-                            .where('restaurant_id', user.restaurant.id)
-    return view.render('pages/menus/index', { menus })
-    // const menus = await auth.user!.related('menus').query()
-  }
+  
 
   /**
    * Display form to create a new record
@@ -26,10 +17,14 @@ export default class MenusController {
   /**
    * Handle form submission for the create action
    */
-  async store({ request, response, }: HttpContext) {
+  async store({ request, response, auth }: HttpContext) {
+    
+    await auth.authenticate()
+    const user = auth.user!
+    const restaurant = await user.related('restaurant').query().firstOrFail()
     const data = await request.validateUsing(MenuCreationValidator)
-    await Menu.create(data)
-    return response.redirect().toRoute('menus.index')
+    await restaurant.related('menus').create(data)
+    return response.redirect().toRoute('restaurants.show',{id: restaurant.id  })
   }
 
   /**
@@ -65,6 +60,6 @@ export default class MenusController {
   async destroy({ params, response }: HttpContext) {
       const menu = await Menu.findOrFail(params.id)
       await menu.delete()
-      return response.redirect().toRoute('menus.index')
+      return response.redirect().toRoute('welcome')
   }
 }

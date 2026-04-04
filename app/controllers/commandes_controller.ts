@@ -3,6 +3,7 @@
 import Menu from '#models/menu'
 import type { HttpContext } from '@adonisjs/core/http'
 import Commande from '#models/commande'
+import { dd } from '@adonisjs/core/services/dumper'
 
 export default class CommandesController {
   /**
@@ -16,8 +17,9 @@ export default class CommandesController {
                                 .query()
                                 .where('validated', false)
                                 .preload('menus')
+                                
      
-    return view.render('pages/Commandes/Index', { commandes })
+    return view.render('pages/commandes/Index', { commandes })
   }
 
   // /**
@@ -28,24 +30,30 @@ export default class CommandesController {
   /**
    * Handle form submission for the create action
    */
-  async store({ params, auth, session }: HttpContext) {
-    const user = auth.user!
-    const commande = await user.related('commandes').query().where('validated', false).first()
-    const menu= await Menu.findOrFail(params.Id)
-    if (!commande) {
-      const newCommande = await user.related('commandes').create({
-    
-        validated: false,
-      })
-      await newCommande.related('menus').attach([menu.id])
+  // N'oublie pas d'ajouter 'request' dans les arguments
+async store({ request, auth, session, response }: HttpContext) {
+  const user = auth.user!
+  
+  const menuId = request.input('menuId') 
+  
+  const menu = await Menu.findOrFail(menuId)
 
-      session.flash('success', 'Menu ajouté à votre commande')
-    } else {
-      await commande.related('menus').attach([menu.id])
-    }
+  
+  let commande = await user.related('commandes').query().where('validated', false).first()
 
-    session.flash('success', 'Menu ajouté à votre commande')
+  if (!commande) {
+
+    commande = await user.related('commandes').create({
+      validated: false,
+    })
   }
+
+  await commande.related('menus').attach([menu.id])
+
+  session.flash('success', `${menu.name} ajouté à votre commande`)
+
+  return response.redirect().back()
+}
 
 
   async validate({params}:HttpContext){

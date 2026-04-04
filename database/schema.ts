@@ -38,8 +38,10 @@ export class CommandeSchema extends BaseModel {
 }
 
 export class MenuSchema extends BaseModel {
-  static $columns = ['createdAt', 'description', 'id', 'image', 'name', 'price', 'restaurantId', 'updatedAt'] as const
+  static $columns = ['category', 'createdAt', 'description', 'id', 'image', 'name', 'price', 'restaurantId', 'updatedAt'] as const
   $columns = MenuSchema.$columns
+  @column()
+  declare category: string
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
   @column()
