@@ -1,6 +1,5 @@
 @layout('layouts/main')
 
-
 <div class="container py-5 min-vh-100">
   
   <div class="d-flex align-items-center justify-content-between mb-5 px-2">
@@ -8,9 +7,21 @@
       <h1 class="fw-800 h2 mb-1">Commandes en cours</h1>
       <p class="text-muted mb-0">Suivez la préparation de vos repas en temps réel.</p>
     </div>
-    <div class="bg-dash-red-subtle p-3 rounded-circle d-none d-md-block">
-      <i class="bi bi-clock-history text-dash-red fs-3"></i>
+    <div class="d-flex align-items-center gap-3">
+      <a href="{{ route('commandes.history') }}" class="btn btn-outline-dark rounded-pill px-4 fw-bold shadow-sm d-none d-md-flex align-items-center gap-2">
+        <i class="bi bi-journal-text"></i>
+        <span>Mon Historique</span>
+      </a>
+      <div class="bg-dash-red-subtle p-3 rounded-circle d-none d-md-block">
+        <i class="bi bi-clock-history text-dash-red fs-3"></i>
+      </div>
     </div>
+  </div>
+
+  <div class="d-md-none mb-4 px-2">
+    <a href="commandes/history" class="btn btn-outline-dark rounded-pill w-100 fw-bold shadow-sm">
+      <i class="bi bi-journal-text me-2"></i>Voir mon historique
+    </a>
   </div>
 
   <div class="row g-4">
@@ -44,7 +55,15 @@
                 @each(item in commande.menus)
                
                 <li class="d-flex justify-content-between align-items-center mb-2">
-                  <span class="text-dark">{{ item.name }}</span>
+                  <div class="d-flex align-items-center gap-2">
+                    <form action="{{ route('commandes.destroy', { id: item.id }) }}?_method=DELETE" method="POST" class="m-0">
+                      {{ csrfField() }}
+                      <button type="submit" class="btn btn-link text-danger p-0 border-0 shadow-none lh-1" title="Retirer {{ item.name }}">
+                        <i class="bi bi-x-circle-fill fs-5"></i>
+                      </button>
+                    </form>
+                    <span class="text-dark">{{ item.name }}</span>
+                  </div>
                   <span class="fw-medium">{{ item.price  }} F</span>
                 </li>
                 @end
@@ -61,25 +80,28 @@
               </div>
               
               <div class="d-flex gap-2">
-                @if(commande.status === 'pending_payment')
-                  <a href="{{ route('checkout.pay', { id: commande.id }) }}" class="btn btn-success rounded-pill px-4 fw-bold shadow-sm">
-                    Payer via MoMo <i class="bi bi-phone-vibrate ms-2"></i>
-                  </a>
+                @if(commande.validated == false)
+                  <form class="m-0" action="{{route('commandes.validate', {id: commande.id})}}" method="POST">
+                    {{ csrfField() }}
+                    <button type="submit" class="btn btn-success rounded-pill px-4 fw-bold shadow-sm">
+                      Valider la commande
+                    </button>
+                  </form>
                 @endif
-                <button class="btn btn-outline-danger rounded-pill px-4 fw-bold" onclick="cancelOrder({{ commande.id }})">
+                {{--<button class="btn btn-outline-danger rounded-pill px-4 fw-bold" onclick="cancelOrder({{ commande.id }})">
                   Annuler
-                </button>
+                </button>--}}
               </div>
             </div>
           </div>
 
           <div class="card-footer bg-light border-0 p-3">
              <div class="d-flex justify-content-around text-center position-relative">
-                <div class="step active">
-                    <i class="bi bi-check-circle-fill text-success"></i>
+                <div class="step {{ commande.validated ? 'active' : 'opacity-50' }}">
+                    <i class="bi {{ commande.validated ? 'bi-check-circle-fill text-success' : 'bi-check-circle' }}"></i>
                     <p class="x-small fw-bold mt-1 mb-0">Enregistrée</p>
                 </div>
-                <div class="step {{ commande.isValidated ? 'active' : 'opacity-50' }}">
+                <div class="step {{ commande.validated ? 'active' : 'opacity-50' }}">
                     <i class="bi bi-shop"></i>
                     <p class="x-small fw-bold mt-1 mb-0">Validée Resto</p>
                 </div>
@@ -98,7 +120,7 @@
           <h3 class="fw-bold mt-4">Aucune commande en cours</h3>
           <p class="text-muted mb-4">Votre estomac semble un peu vide...</p>
           <a href="{{ route('welcome') }}" class="btn btn-dash-red rounded-pill px-5 py-3 fw-bold text-white shadow-lg border-0">
-            Voir les restaurants
+            Voir les menus
           </a>
         </div>
       </div>
@@ -120,11 +142,6 @@
     color: #28A745;
   }
   
-  /* Ligne de progression entre les étapes */
-  .card-footer::after {
-      /* Logique optionnelle pour une ligne horizontale */
-  }
-
   .shadow-sm {
     transition: transform 0.2s;
   }

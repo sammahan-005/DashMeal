@@ -1,4 +1,5 @@
 import Restaurant from '#models/restaurant'
+import Commande from '#models/commande'
 import { type HttpContext } from '@adonisjs/core/http'
 import { RestaurantCreationValidator } from '#validators/restaurant'
 //import { dd } from '@adonisjs/core/services/dumper'
@@ -26,6 +27,13 @@ export default class RestaurantsController {
     return view.render('pages/restaurants/create')
   }
 
+  async pending({ view, params }: HttpContext) {
+    const commandes = await Commande.query().where('validated', true).preload('menus')
+    const menu = commandes.filter(commande =>
+      commande.menus.some((m) => m.restaurant_id === Number(params.id))
+    )
+    return view.render('pages/restaurants/pending', { menu })
+  }
   /**
    * Handle form submission for the create action
    */

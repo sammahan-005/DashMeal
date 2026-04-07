@@ -50,11 +50,13 @@ router
     router.get('dashboard', [Dashboard, 'index'])
     router.resource('menus', Menus).except(['index'])
     //.use('*' , [middleware.restaurantOwner()])
-    router
-      .group(() => {
-        router.resource('restaurants', Restaurant).except(['index'])
-        router.resource('commandes', Commandes).except(['create', 'edit', 'show', 'update'])
-      })  
+    router.get('restaurants/pending/:id', [Restaurant, 'pending']).as('restaurants.pending') 
+    router.post('commandes/:id/validate', [Commandes, 'validate']).as('commandes.validate')
+    router.get('commandes/history', [Commandes, 'history']).as('commandes.history')
+    router.resource('restaurants', Restaurant).except(['index'])
+    router.resource('commandes', Commandes).except(['create', 'edit', 'update'])
+        
+       
   })
   .use(middleware.auth())
   .use(middleware.silentAuth())
@@ -67,7 +69,7 @@ router.get("/swagger", async () => {
 
 // Renders Swagger-UI and passes YAML-output of /swagger
 router.get("/docs", async () => {
-  return AutoSwagger.default.ui("/swagger", swagger);
-  // return AutoSwagger.default.scalar("/swagger"); to use Scalar instead. If you want, you can pass proxy url as second argument here.
+  //return AutoSwagger.default.ui("/swagger", swagger);
+  //return AutoSwagger.default.scalar("/swagger"); //to use Scalar instead. If you want, you can pass proxy url as second argument here.
   // return AutoSwagger.default.rapidoc("/swagger", "view"); to use RapiDoc instead (pass "view" default, or "read" to change the render-style)
 });  

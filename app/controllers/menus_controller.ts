@@ -22,8 +22,15 @@ export default class MenusController {
     await auth.authenticate()
     const user = auth.user!
     const restaurant = await user.related('restaurant').query().firstOrFail()
-    const data = await request.validateUsing(MenuCreationValidator)
-    await restaurant.related('menus').create(data)
+    const {image,...data} = await request.validateUsing(MenuCreationValidator)
+    const menu = await restaurant.related('menus').create(data)
+
+    if (image) {
+      await image.moveToDisk(`menus/${menu.id}.${image.extname}`)
+      menu.image = `menus/${menu.id}.${image.extname}`
+      await menu.save()
+    }
+    //dd(menu)
     return response.redirect().toRoute('restaurants.show',{id: restaurant.id  })
   }
 
@@ -48,8 +55,14 @@ export default class MenusController {
    */
   async update({ params, request, view }: HttpContext) {
       let menu = await Menu.findOrFail(params.id)
-      const validated = await request.validateUsing(MenuCreationValidator)
+      const { image, ...validated } = await request.validateUsing(MenuCreationValidator)
       menu.merge(validated)
+      
+      if (image) {
+        await image.moveToDisk(`menus/${menu.id}.${image.extname}`)
+        menu.image = `menus/${menu.id}.${image.extname}`
+      }
+
       await menu.save()
       return view.render('pages/menus/edit', { menu })
   }
