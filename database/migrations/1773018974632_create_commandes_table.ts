@@ -8,6 +8,8 @@ export default class extends BaseSchema {
       table.increments('id')
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
       table.boolean('validated').defaultTo(false)
+      table.boolean('delivered').defaultTo(false)
+      table.boolean('ready').defaultTo(false)
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

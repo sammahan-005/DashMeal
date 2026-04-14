@@ -21,6 +21,8 @@ export type ScannedRoutes = {
     'menus.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'restaurants.pending': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'commandes.validate': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'commandes.ready': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'commandes.delivered': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'commandes.history': { paramsTuple?: []; params?: {} }
     'restaurants.create': { paramsTuple?: []; params?: {} }
     'restaurants.store': { paramsTuple?: []; params?: {} }
@@ -75,6 +77,8 @@ export type ScannedRoutes = {
     'session.destroy': { paramsTuple?: []; params?: {} }
     'menus.store': { paramsTuple?: []; params?: {} }
     'commandes.validate': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'commandes.ready': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'commandes.delivered': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'restaurants.store': { paramsTuple?: []; params?: {} }
     'commandes.store': { paramsTuple?: []; params?: {} }
   }

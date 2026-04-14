@@ -74,6 +74,7 @@ export default class CommandesController {
                                 .query()
                                 .where('validated', true)
                                 .preload('menus')
+                                .orderBy('created_at', 'desc')
                                 
     return view.render('pages/commandes/history', { commandes })
   }

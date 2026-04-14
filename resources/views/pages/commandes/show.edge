@@ -76,7 +76,7 @@
           
           <div class="d-flex justify-content-between mb-2">
             <span class="text-muted">Sous-total</span>
-            <span class="fw-bold">{{ total }} F</span>
+            <span class="fw-bold">{{ commande.menus.reduce((sum, m) => sum + m.price, 0) }} F</span>
           </div>
           <div class="d-flex justify-content-between mb-2">
             <span class="text-muted">Frais de livraison</span>
@@ -85,7 +85,7 @@
           <hr>
           <div class="d-flex justify-content-between align-items-center mb-4">
             <span class="fw-bold h5 mb-0">Total</span>
-            <span class="fw-800 h4 mb-0 text-dash-red">{{ total }} F</span>
+            <span class="fw-800 h4 mb-0 text-dash-red">{{ commande.menus.reduce((sum, m) => sum + m.price, 0) }} F</span>
           </div>
 
           @if(!commande.validated)

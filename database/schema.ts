@@ -23,12 +23,16 @@ export class CommandeMenuSchema extends BaseModel {
 }
 
 export class CommandeSchema extends BaseModel {
-  static $columns = ['createdAt', 'id', 'updatedAt', 'userId', 'validated'] as const
+  static $columns = ['createdAt', 'delivered', 'id', 'ready', 'updatedAt', 'userId', 'validated'] as const
   $columns = CommandeSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
+  @column()
+  declare delivered: boolean | null
   @column({ isPrimary: true })
   declare id: number
+  @column()
+  declare ready: boolean | null
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
   @column()

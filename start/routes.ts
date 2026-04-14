@@ -52,6 +52,8 @@ router
     //.use('*' , [middleware.restaurantOwner()])
     router.get('restaurants/pending/:id', [Restaurant, 'pending']).as('restaurants.pending') 
     router.post('commandes/:id/validate', [Commandes, 'validate']).as('commandes.validate')
+    router.post('commandes/:id/ready', [Restaurant, 'ready']).as('commandes.ready')
+    router.post('commandes/:id/delivered', [Restaurant, 'delivered']).as('commandes.delivered')
     router.get('commandes/history', [Commandes, 'history']).as('commandes.history')
     router.resource('restaurants', Restaurant).except(['index'])
     router.resource('commandes', Commandes).except(['create', 'edit', 'update'])

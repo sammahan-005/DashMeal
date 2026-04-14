@@ -2,7 +2,8 @@ import Restaurant from '#models/restaurant'
 import Commande from '#models/commande'
 import { type HttpContext } from '@adonisjs/core/http'
 import { RestaurantCreationValidator } from '#validators/restaurant'
-//import { dd } from '@adonisjs/core/services/dumper'
+import { dd } from '@adonisjs/core/services/dumper'
+
 
 export default class RestaurantsController {
   
@@ -28,11 +29,26 @@ export default class RestaurantsController {
   }
 
   async pending({ view, params }: HttpContext) {
-    const commandes = await Commande.query().where('validated', true).preload('menus')
-    const menu = commandes.filter(commande =>
-      commande.menus.some((m) => m.restaurant_id === Number(params.id))
+
+    const restaurant = await Restaurant.findOrFail(params.id)
+
+    const toutesLesCommandes = await Commande.query()
+      .where('validated', true)
+      .where('delivered', false)
+      .preload('menus')
+      .join('users', 'commandes.user_id', 'users.id')
+      .select('commandes.*')
+      .select('users.full_name as user_name')
+      .orderBy('commandes.created_at', 'desc')
+
+
+    const commandes = toutesLesCommandes.filter(commande =>
+      commande.menus. some((m) => m.restaurant_id === Number(params.id))
     )
-    return view.render('pages/restaurants/pending', { menu })
+
+    //dd(commandes)
+
+    return view.render('pages/restaurants/pending', { commandes, restaurant })
   }
   /**
    * Handle form submission for the create action
@@ -57,6 +73,20 @@ export default class RestaurantsController {
     const menus = await restaurant.related('menus').query()
     //dd(menus)
     return view.render('pages/restaurants/index', { restaurant, menus })
+  }
+
+  async ready({ params, response }: HttpContext) {
+    const commande = await Commande.findOrFail(params.id)
+    commande.ready = true
+    await commande.save()
+    return response.redirect().back()
+  }
+
+  async delivered({ params, response }: HttpContext) {
+    const commande = await Commande.findOrFail(params.id)
+    commande.delivered = true
+    await commande.save()
+    return response.redirect().back()
   }
 
   // /**

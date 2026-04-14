@@ -1,15 +1,15 @@
 @layout('layouts/main')
 
-
 <div class="container py-5 min-vh-100">
   
   <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-5 gap-3">
     <div>
-      <a href="{{ route('restaurants.show', { id: restaurant.id }) }}" class="text-decoration-none small fw-bold text-muted mb-2 d-block">
+      <a href="{{ route('restaurants.show', {id :restaurant.id}) }}" class="text-decoration-none small fw-bold text-muted mb-2 d-block">
         <i class="bi bi-arrow-left"></i> Retour à la carte
       </a>
       <h1 class="fw-800 h2 mb-1">Commandes Reçues</h1>
-      <p class="text-muted mb-0">Gérez les flux de préparation pour <strong>{{ restaurant.name }}</strong></p>
+      {{-- Utilisation de l'objet restaurant envoyé par le contrôleur --}}
+      <p class="text-muted mb-0">Gérez les flux de préparation pour <strong> {{ restaurant?.name || 'votre établissement' }} </strong></p>
     </div>
     
     <div class="d-flex gap-2">
@@ -21,6 +21,7 @@
   </div>
 
   <div class="row g-4">
+    {{-- On boucle sur "commandes" car c'est ce que le contrôleur envoie désormais --}}
     @each(commande in commandes)
       <div class="col-12">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden {{ !commande.validated ? 'border-start border-4 border-warning' : 'border-start border-4 border-success' }}">
@@ -30,47 +31,56 @@
               <div class="col-12 col-md-2">
                 <span class="text-muted x-small text-uppercase fw-bold d-block">Commande</span>
                 <span class="fw-800 h5">#{{ commande.id }}</span>
-                <span class="d-block small text-muted">{{ commande.createdAt.toFormat('HH:mm') }}</span>
+                {{-- Sécurisation du formatage de date --}}
+                <span class="d-block small text-muted">{{ commande.createdAt ? commande.createdAt.toFormat('HH:mm') : '--:--' }}</span>
               </div>
 
               <div class="col-12 col-md-5">
                 <span class="text-muted x-small text-uppercase fw-bold d-block">Client & Articles</span>
-                <p class="fw-bold mb-2"><i class="bi bi-person-circle me-1"></i> {{ commande.user?.fullName || 'Client DashMeal' }}</p>
+                <p class="fw-bold mb-2">
+                  <i class="bi bi-person-circle me-1"></i> 
+                  {{ commande.userName || 'Client DashMeal' }}
+                </p>
                 <div class="d-flex flex-wrap gap-1">
                   @each(item in commande.menus)
-                    <span class="badge bg-light text-dark border-0 fw-medium px-2 py-1">
-                      {{ item.name }}
-                    </span>
+                    {{-- On affiche uniquement les items qui appartiennent à ce restaurant --}}
+                    @if(item.restaurant_id === Number(restaurant.id))
+                      <span class="badge bg-light text-dark border-0 fw-medium px-2 py-1">
+                        {{ item.name }}
+                      </span>
+                    @endif
                   @end
                 </div>
               </div>
 
               <div class="col-6 col-md-2 text-md-center">
                 <span class="text-muted x-small text-uppercase fw-bold d-block">Total</span>
-                <span class="fw-800 text-dark">{{ commande.totalPrice || '---' }} F</span>
+                <span class="fw-800 text-dark">{{ commande.menus.reduce((sum, m) => sum + m.price, 0) }} F</span>
               </div>
 
               <div class="col-6 col-md-3 text-end">
-                @if(!commande.validated)
-                  <form action="{{ route('commandes.validate', { id: commande.id }) }}" method="POST" class="d-inline">
-                    {{ csrfField() }}
-                    <button type="submit" class="btn btn-success rounded-pill fw-bold px-4 shadow-sm w-100">
-                      Accepter <i class="bi bi-check2-circle ms-1"></i>
-                    </button>
-                  </form>
-                @else
-                  <div class="dropdown w-100">
-                    <button class="btn btn-outline-dark rounded-pill fw-bold w-100 dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                      En préparation
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3">
-                      <li><a class="dropdown-item fw-bold text-primary" href="#"><i class="bi bi-bicycle me-2"></i>Prête pour livraison</a></li>
-                      <li><a class="dropdown-item fw-bold text-success" href="#"><i class="bi bi-check-all me-2"></i>Terminée</a></li>
-                      <li><hr class="dropdown-divider"></li>
-                      <li><a class="dropdown-item text-danger small" href="#"><i class="bi bi-x-circle me-2"></i>Annuler</a></li>
-                    </ul>
-                  </div>
-                @endif
+                
+                <div class="dropdown w-100">
+                  <button class="btn btn-outline-dark rounded-pill fw-bold w-100 dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    En préparation
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3">
+                    <li>
+                      <form action="{{ route('commandes.ready', { id: commande.id }) }}" method="POST">
+                        {{ csrfField() }}
+                        <button type="submit" class="dropdown-item fw-bold text-primary"><i class="bi bi-bicycle me-2"></i>Prête pour livraison</button>
+                      </form>
+                    </li>
+                    <li>
+                      <form action="{{ route('commandes.delivered', { id: commande.id }) }}" method="POST">
+                        {{ csrfField() }}
+                        <button type="submit" class="dropdown-item fw-bold text-success"><i class="bi bi-check-all me-2"></i>Terminée</button>
+                      </form>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger small" href=""><i class="bi bi-x-circle me-2"></i>Annuler</a></li>
+                  </ul>
+                </div>
               </div>
 
             </div>
@@ -88,30 +98,4 @@
     @end
   </div>
 </div>
-
-<style>
-  .fw-800 { font-weight: 800; }
-  .text-dash-red { color: #E31E24; }
-  .x-small { font-size: 0.65rem; }
-  
-  .border-dashed { border-style: dashed !important; }
-  
-  /* Animation pour les nouvelles commandes non validées */
-  .border-warning {
-    animation: pulse-border 2s infinite;
-  }
-
-  @keyframes pulse-border {
-    0% { border-left-color: #ffc107; }
-    50% { border-left-color: #fff3cd; }
-    100% { border-left-color: #ffc107; }
-  }
-
-  .card {
-    transition: transform 0.2s;
-  }
-  .card:hover {
-    transform: scale(1.01);
-  }
-</style>
 @end
