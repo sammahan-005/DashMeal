@@ -19,10 +19,11 @@
         </div>
     </div>
   </div>
-
+ 
   <div class="row g-4">
     {{-- On boucle sur "commandes" car c'est ce que le contrôleur envoie désormais --}}
     @each(commande in commandes)
+      @if(!commande.delivered)
       <div class="col-12">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden {{ !commande.validated ? 'border-start border-4 border-warning' : 'border-start border-4 border-success' }}">
           <div class="card-body p-4">
@@ -87,6 +88,8 @@
           </div>
         </div>
       </div>
+      @endif
+      
     @else
       <div class="col-12 text-center py-5">
         <div class="bg-white rounded-5 p-5 shadow-sm d-inline-block border border-dashed">
@@ -95,7 +98,9 @@
           <p class="text-muted mb-0">Dès qu'un client commande, elle apparaîtra ici avec une alerte.</p>
         </div>
       </div>
+      
     @end
+    
   </div>
 </div>
 @end

@@ -34,7 +34,7 @@ export default class RestaurantsController {
 
     const toutesLesCommandes = await Commande.query()
       .where('validated', true)
-      .where('delivered', false)
+      // .where('delivered', false)
       .preload('menus')
       .join('users', 'commandes.user_id', 'users.id')
       .select('commandes.*')
