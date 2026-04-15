@@ -2,7 +2,7 @@ import Restaurant from '#models/restaurant'
 import Commande from '#models/commande'
 import { type HttpContext } from '@adonisjs/core/http'
 import { RestaurantCreationValidator } from '#validators/restaurant'
-import { dd } from '@adonisjs/core/services/dumper'
+//import { dd } from '@adonisjs/core/services/dumper'
 
 
 export default class RestaurantsController {
