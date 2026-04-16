@@ -1,52 +1,94 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top py-2">
-  <div class="container flex-nowrap">
-    <a class="navbar-brand" href="{{ route('home') }}">
-      <img src="/logo.jpeg" alt="DashMeal" style="height: 40px; width: auto;">
+  <div class="container">
+    {{-- Logo --}}
+    <a class="navbar-brand d-flex align-items-center" href="{{ route('welcome') }}">
+      <img src="/logo.jpeg" alt="DashMeal" style="height: 40px; width: auto;" class="me-2">
+      <span class="fw-bold d-none d-sm-inline">DashMeal</span>
     </a>
 
-    <div class="ms-auto d-flex align-items-center gap-2">
-      <a href="/restaurant/register" class="btn btn-outline-dark rounded-pill px-3 py-1 fw-bold d-none d-md-inline-block small">
-        Je suis un restaurant
-      </a>
-      <a href="/restaurant/register" class="btn btn-outline-dark rounded-circle d-md-none p-2" title="Devenir partenaire">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-          <path d="M8.5 14.5A1.5 1.5 0 1 1 7 13a1.5 1.5 0 0 1 1.5 1.5zM1 2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2z"/>
+    <div class="ms-auto d-flex align-items-center gap-3">
+      
+     
+
+      {{-- Icône Panier avec Décompte --}}
+      <a href="{{route('commandes.index')}}" class="position-relative p-2 text-dark transition-transform hover-scale">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
         </svg>
+        {{-- Badge de décompte (affiché seulement si > 0) --}}
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-white" style="font-size: 0.65rem; padding: 0.35em 0.5em;">
+            {{pendingCount}} 
+            
+          </span>
       </a>
 
+      {{-- Menu Utilisateur --}}
       <div class="dropdown">
-        <button class="btn p-0 border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          @if(auth.user)
-            @!avatar({ 
-              initials: auth.user.initials, 
-              class: 'rounded-circle border border-2 border-white shadow-sm',
-              style: 'width: 40px; height: 40px; background-color: #E31E24; color: white;' 
-            })
-          @else
-            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 40px; height: 40px;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#6c757d" viewBox="0 0 16 16">
-                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
-              </svg>
+        <button class="btn p-0 border-0 transition-transform hover-scale" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          
+            <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm text-white fw-bold border border-2 border-white" 
+                 style="width: 42px; height: 42px; background: linear-gradient(135deg, #E31E24, #b3171b);">
+              {{ auth.user.fullName.split(' ').map(n => n[0]).join('').toUpperCase() }}
             </div>
-          @endif
+          
         </button>
-        <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 mt-2">
-          @if(auth.user)
-            <li><h6 class="dropdown-header fw-bold text-dark">{{ auth.user.fullName }}</h6></li>
-            <li><a class="dropdown-item py-2" href="/profile">Mon Profil</a></li>
-            <li><a class="dropdown-item py-2" href="/orders">Mes Commandes</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li>
-              @form({ route: 'session.destroy', method: 'POST' })
-                <button type="submit" class="dropdown-item text-danger fw-bold">Déconnexion</button>
-              @end
+
+        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-3 py-3" style="min-width: 220px;">
+          @if(auth.isAuthenticated)
+            <li class="px-3 mb-2 text-center">
+              <p class="small text-muted mb-0">Connecté en tant que</p>
+              <p class="fw-bold text-dark mb-0">{{ auth.user.fullName }}</p>
+            </li>
+            <li><hr class="dropdown-divider opacity-50"></li>
+            <li><a class="dropdown-item py-2 px-3" href="{{ route('commandes.index') }}"><i class="bi bi-bag-check me-2"></i>Mes Commandes</a></li>
+            
+             
+             <li>
+              
+             @if(await auth.user.related('restaurant').query().first()) 
+             <a class="dropdown-item py-2 px-3" href="{{ route('restaurants.show', await auth.user.related('restaurant').query().first() )}}" class="btn btn-outline-dark rounded-pill px-3 py-2 fw-bold d-none d-md-flex align-items-center gap-2 border-2 transition-all hover-bg-dark" style="font-size: 0.85rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-home">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" />
+                  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+                </svg>
+                Gestion de mon commerce
+              </a>
+             @else
+             <a class="dropdown-item py-2 px-3" href="{{ route('restaurants.create') }}" class="btn btn-outline-dark rounded-pill px-3 py-2 fw-bold d-none d-md-flex align-items-center gap-2 border-2 transition-all hover-bg-dark" style="font-size: 0.85rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-home">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" />
+                  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+                </svg>
+                Je suis un commerce
+              </a>
+              @endif
+            </li>
+              </li>
+              <li><hr class="dropdown-divider opacity-50"></li>
+            <li class="px-2">
+              <form action="{{ route('session.destroy') }}" method="POST" class="d-inline">
+                {{ csrfField() }}
+                <button type="submit" class="dropdown-item text-danger fw-bold py-2 rounded-3">
+                  <i class="bi bi-box-arrow-right me-2"></i>Déconnexion
+                </button>
+              </form>
             </li>
           @else
-            <li><a class="dropdown-item py-2" href="{{ route('session.create') }}">Connexion</a></li>
-            <li><a class="dropdown-item py-2 fw-bold text-dash-red" href="{{ route('new_account.create') }}">S'inscrire</a></li>
+            <li><a class="dropdown-item py-2" href="{{ route('session.create') }}">Se connecter</a></li>
+            <li class="px-2 mt-2">
+              <a class="btn btn-danger w-100 rounded-pill fw-bold" href="{{ route('new_account.create') }}">S'inscrire</a>
+            </li>
           @end
         </ul>
       </div>
     </div>
   </div>
 </nav>
+
+<style>
+  .transition-transform { transition: transform 0.2s ease; }
+  .hover-scale:hover { transform: scale(1.1); }
+  .hover-bg-dark:hover { background-color: #1a1a1a; color: white !important; }
+  .dropdown-item { transition: background 0.2s; }
+  .dropdown-item:hover { background-color: #f8f9fa; }
+</style>

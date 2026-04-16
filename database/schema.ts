@@ -23,21 +23,29 @@ export class CommandeMenuSchema extends BaseModel {
 }
 
 export class CommandeSchema extends BaseModel {
-  static $columns = ['createdAt', 'id', 'updatedAt', 'userId'] as const
+  static $columns = ['createdAt', 'delivered', 'id', 'ready', 'updatedAt', 'userId', 'validated'] as const
   $columns = CommandeSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
+  @column()
+  declare delivered: boolean | null
   @column({ isPrimary: true })
   declare id: number
+  @column()
+  declare ready: boolean | null
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
   @column()
   declare userId: number | null
+  @column()
+  declare validated: boolean | null
 }
 
 export class MenuSchema extends BaseModel {
-  static $columns = ['createdAt', 'description', 'id', 'image', 'name', 'price', 'restaurantId', 'updatedAt'] as const
+  static $columns = ['category', 'createdAt', 'description', 'id', 'image', 'name', 'price', 'restaurantId', 'updatedAt'] as const
   $columns = MenuSchema.$columns
+  @column()
+  declare category: string
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
   @column()
@@ -57,12 +65,14 @@ export class MenuSchema extends BaseModel {
 }
 
 export class RestaurantSchema extends BaseModel {
-  static $columns = ['address', 'createdAt', 'id', 'name', 'phoneNumber', 'updatedAt', 'userId'] as const
+  static $columns = ['address', 'createdAt', 'description', 'id', 'name', 'phoneNumber', 'updatedAt', 'userId'] as const
   $columns = RestaurantSchema.$columns
   @column()
   declare address: string
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
+  @column()
+  declare description: string
   @column({ isPrimary: true })
   declare id: number
   @column()

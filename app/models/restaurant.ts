@@ -17,6 +17,9 @@ export default class Restaurant extends RestaurantSchema {
 
     @column()
     declare address: string
+    
+    @column()
+    declare description: string
 
     @column()
     declare phone_number: string

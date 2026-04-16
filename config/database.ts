@@ -21,6 +21,13 @@ const dbConfig = defineConfig({
       connection: {
         filename: app.tmpPath('db.sqlite3'),
       },
+      pool: {
+        // min: 2,
+        max: 50, // Augmentez ce chiffre pour supporter plus de requêtes simultanées
+        idleTimeoutMillis: 30000,
+        createTimeoutMillis: 30000,
+        acquireTimeoutMillis: 30000,
+      },
       useNullAsDefault: true,
       migrations: {
         naturalSort: true,

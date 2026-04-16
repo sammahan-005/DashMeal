@@ -1,0 +1,149 @@
+@layout('layouts/main')
+
+<div class="container py-5 min-vh-100">
+  
+  <div class="d-flex align-items-center justify-content-between mb-5 px-2">
+    <div>
+      <h1 class="fw-800 h2 mb-1">Commandes en cours</h1>
+      <p class="text-muted mb-0">Suivez la préparation de vos repas en temps réel.</p>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+      <a href="{{ route('commandes.history') }}" class="btn btn-outline-dark rounded-pill px-4 fw-bold shadow-sm d-none d-md-flex align-items-center gap-2">
+        <i class="bi bi-journal-text"></i>
+        <span>Mon Historique</span>
+      </a>
+      <div class="bg-dash-red-subtle p-3 rounded-circle d-none d-md-block">
+        <i class="bi bi-clock-history text-dash-red fs-3"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-md-none mb-4 px-2">
+    <a href="commandes/history" class="btn btn-outline-dark rounded-pill w-100 fw-bold shadow-sm">
+      <i class="bi bi-journal-text me-2"></i>Voir mon historique
+    </a>
+  </div>
+
+  <div class="row g-4">
+    @each(commande in commandes)
+      <div class="col-12 col-lg-8 mx-auto">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+          
+          <div class="card-header bg-white border-bottom p-3 d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-3">
+              <div class="rounded-3 bg-light p-2 text-center" style="min-width: 50px;">
+                <span class="d-block fw-bold small text-uppercase">N°</span>
+                <span class="fw-800 text-dash-red">{{ commande.id }}</span>
+              </div>
+              <div>
+                <h5 class="fw-bold mb-0"></h5>
+                <span class="x-small text-muted">{{ commande.createdAt.toFormat('dd LLL yyyy à HH:mm') }}</span>
+              </div>
+            </div>
+            <div class="text-end">
+              <span class="badge rounded-pill bg-warning text-dark px-3 py-2 fw-bold">
+                <i class="bi bi-hourglass-split me-1"></i> En attente
+              </span>
+            </div>
+          </div>
+
+          <div class="card-body p-4">
+            <div class="mb-4">
+              <h6 class="fw-bold text-uppercase small text-muted mb-3">Détails du panier</h6>
+              <ul class="list-unstyled mb-0">
+                 {{-- @dd(commande.menus) --}}
+                @each(item in commande.menus)
+               
+                <li class="d-flex justify-content-between align-items-center mb-2">
+                  <div class="d-flex align-items-center gap-2">
+                    <form action="{{ route('commandes.destroy', { id: item.id }) }}?_method=DELETE" method="POST" class="m-0">
+                      {{ csrfField() }}
+                      <button type="submit" class="btn btn-link text-danger p-0 border-0 shadow-none lh-1" title="Retirer {{ item.name }}">
+                        <i class="bi bi-x-circle-fill fs-5"></i>
+                      </button>
+                    </form>
+                    <span class="text-dark">{{ item.name }}</span>
+                  </div>
+                  <span class="fw-medium">{{ item.price  }} F</span>
+                </li>
+                @end
+              </ul>
+            </div>
+                   
+                    
+            <hr class="opacity-50">
+
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+              <div>
+                <p class="small text-muted mb-0">Total à régler</p>
+                <h4 class="fw-800 text-dark mb-0">{{ commande.menus.reduce((sum, m) => sum + m.price, 0) }} F <small class="fs-6 text-muted">CFA</small></h4>
+              </div>
+              
+              <div class="d-flex gap-2">
+                @if(commande.validated == false)
+                  <form class="m-0" action="{{route('commandes.validate', {id: commande.id})}}" method="POST">
+                    {{ csrfField() }}
+                    <button type="submit" class="btn btn-success rounded-pill px-4 fw-bold shadow-sm">
+                      Valider la commande
+                    </button>
+                  </form>
+                @endif
+                {{--<button class="btn btn-outline-danger rounded-pill px-4 fw-bold" onclick="cancelOrder({{ commande.id }})">
+                  Annuler
+                </button>--}}
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer bg-light border-0 p-3">
+             <div class="d-flex justify-content-around text-center position-relative">
+                <div class="step {{ commande.validated ? 'active' : 'opacity-50' }}">
+                    <i class="bi {{ commande.validated ? 'bi-check-circle-fill text-success' : 'bi-check-circle' }}"></i>
+                    <p class="x-small fw-bold mt-1 mb-0">Enregistrée</p>
+                </div>
+                <div class="step {{ commande.validated ? 'active' : 'opacity-50' }}">
+                    <i class="bi bi-shop"></i>
+                    <p class="x-small fw-bold mt-1 mb-0">Validée Resto</p>
+                </div>
+                <div class="step opacity-50">
+                    <i class="bi bi-bicycle"></i>
+                    <p class="x-small fw-bold mt-1 mb-0">En route</p>
+                </div>
+             </div>
+          </div>
+        </div>
+      </div>
+    @else
+      <div class="col-12 text-center py-5">
+        <div class="bg-white rounded-5 p-5 shadow-sm d-inline-block">
+          <i class="bi bi-bag-x display-1 text-light"></i>
+          <h3 class="fw-bold mt-4">Aucune commande en cours</h3>
+          <p class="text-muted mb-4">Votre estomac semble un peu vide...</p>
+          <a href="{{ route('welcome') }}" class="btn btn-dash-red rounded-pill px-5 py-3 fw-bold text-white shadow-lg border-0">
+            Voir les menus
+          </a>
+        </div>
+      </div>
+    @end
+  </div>
+</div>
+
+<style>
+  .fw-800 { font-weight: 800; }
+  .text-dash-red { color: #E31E24; }
+  .bg-dash-red-subtle { background-color: rgba(227, 30, 36, 0.1); }
+  .btn-dash-red { background-color: #E31E24; }
+  .x-small { font-size: 0.7rem; }
+  
+  .step i {
+    font-size: 1.2rem;
+  }
+  .step.active {
+    color: #28A745;
+  }
+  
+  .shadow-sm {
+    transition: transform 0.2s;
+  }
+</style>
+@end

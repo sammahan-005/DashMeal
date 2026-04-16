@@ -14,6 +14,14 @@ export default class Commande extends CommandeSchema {
     @column()
     declare user_id: number
 
+    @column()
+    declare validated: boolean
+
+    @column()
+    declare delivered: boolean
+
+    @column()
+    declare ready: boolean
 
     @column.dateTime({ autoCreate: true })
     declare createdAt: DateTime
@@ -21,11 +29,18 @@ export default class Commande extends CommandeSchema {
     @column.dateTime({ autoCreate: true, autoUpdate: true })
     declare updatedAt: DateTime
 
+    @column({ columnName: 'user_name' })
+    declare userName: string | null
+
     @belongsTo(() => User)
     declare user: BelongsTo<typeof User>
 
-    @manyToMany(() => Menu)
+    @manyToMany(() => Menu,{
+        pivotTable: 'commande_menus'
+    })
     declare menus: ManyToMany<typeof Menu>
+
+
 
 
 }
