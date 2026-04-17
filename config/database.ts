@@ -1,5 +1,6 @@
 import app from '@adonisjs/core/services/app'
 import { defineConfig } from '@adonisjs/lucid'
+import env from '#start/env'
 
 const dbConfig = defineConfig({
   /**
@@ -43,21 +44,27 @@ const dbConfig = defineConfig({
      * PostgreSQL connection.
      * Install package to switch: npm install pg
      */
-    // pg: {
-    //   client: 'pg',
-    //   connection: {
-    //     host: env.get('DB_HOST'),
-    //     port: env.get('DB_PORT'),
-    //     user: env.get('DB_USER'),
-    //     password: env.get('DB_PASSWORD'),
-    //     database: env.get('DB_DATABASE'),
-    //   },
-    //   migrations: {
-    //     naturalSort: true,
-    //     paths: ['database/migrations'],
-    //   },
-    //   debug: app.inDev,
-    // },
+   pg: {
+  client: 'pg',
+  connection: {
+    // Si DATABASE_URL est présent, on l'utilise, sinon on prend les variables séparées
+    connectionString: env.get('DATABASE_URL'),
+    
+    host: env.get('DB_HOST'),
+    port: env.get('DB_PORT') ? Number(env.get('DB_PORT')) : 5432,
+    user: env.get('DB_USER'),
+    password: env.get('DB_PASSWORD'),
+    database: env.get('DB_DATABASE'),
+
+    // C'est ICI que l'on place la config SSL
+    ssl: env.get('NODE_ENV') === 'production' ? { rejectUnauthorized: false } : false,
+  },
+  migrations: {
+    naturalSort: true,
+    paths: ['database/migrations'],
+  },
+  debug: app.inDev,
+},
 
     /**
      * MySQL / MariaDB connection.
