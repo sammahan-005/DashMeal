@@ -1,6 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Menu from '#models/menu'
-import {dd} from '@adonisjs/core/services/dumper'
+// import {dd} from '@adonisjs/core/services/dumper'
 
 export default class WelcomesController {
     async index({ view, auth}: HttpContext) {
