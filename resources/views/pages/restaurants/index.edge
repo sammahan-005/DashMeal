@@ -7,7 +7,7 @@
       <div class="row align-items-center g-4">
         <div class="col-12 col-md-auto text-center">
           <div class="mx-auto rounded-4 shadow-sm border overflow-hidden" style="width: 120px; height: 120px;">
-            <img src="{{ restaurant.logoUrl || '/logo.jpeg' }}" class="w-100 h-100 object-fit-cover" alt="Logo">
+            <img src="{{ restaurant.logoUrl || '//images/logo.jpeg' }}" class="w-100 h-100 object-fit-cover" alt="Logo">
           </div>
         </div>
         
@@ -116,7 +116,7 @@
           <div class="d-flex flex-row align-items-stretch h-100">
             
             <div class="flex-shrink-0" style="width: 140px; min-height: 140px;">
-              <img src="{{ menu.image ? 'storage/' + menu.image : '/food-plate.avif' }}" 
+              <img src="{{ menu.image ? 'storage/' + menu.image : '//images/food-plate.avif' }}" 
                    class="w-100 h-100 object-fit-cover" 
                    alt="{{ menu.name }}">
             </div>
